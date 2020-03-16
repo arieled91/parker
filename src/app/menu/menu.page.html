@@ -1,0 +1,17 @@
+<ion-menu side="start" menuId="{{mainMenu}}" contentId="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="secondary">
+        <ion-button (click)="addCar()">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Autos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list *ngIf="($cars | async) as cars">
+      <ion-item *ngFor="let car of cars">{{car.name}}</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
