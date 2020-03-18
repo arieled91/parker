@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnChanges, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Car} from './model/car.model';
-import {CarService} from './service/car.service';
+import {CarStoreService} from './store/car-store.service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ export class CarPage implements OnInit, AfterViewInit {
 
   constructor(
       private formBuilder: FormBuilder,
-      private carService: CarService,
+      private carService: CarStoreService,
       private router: Router,
   ) {
     this.buildForm();
@@ -55,8 +55,8 @@ export class CarPage implements OnInit, AfterViewInit {
 
 
   save() {
-    this.carService.save(this.car);
-    this.carService.findAll().subscribe(data => console.log(data));
-    this.router.navigate(['/']);
+    this.carService.insert(this.car);
+    // this.carService.findAll().subscribe(data => console.log(data));
+    // this.router.navigate(['/']);
   }
 }

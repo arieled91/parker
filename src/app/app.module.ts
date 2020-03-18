@@ -11,6 +11,10 @@ import { AppRoutingModule } from './app-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuPage} from './menu/menu.page';
 import {SQLite} from '@ionic-native/sqlite/ngx';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './state/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import {CarEffects} from './state/effects/car.effect';
 
 @NgModule({
   declarations: [
@@ -24,6 +28,14 @@ import {SQLite} from '@ionic-native/sqlite/ngx';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    EffectsModule.forRoot([CarEffects]),
   ],
   providers: [
     StatusBar,

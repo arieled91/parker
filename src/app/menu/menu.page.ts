@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {Car} from '../car/model/car.model';
-import {CarService} from '../car/service/car.service';
+import {CarStoreService} from '../car/store/car-store.service';
 import {MenuController} from '@ionic/angular';
 
 @Component({
@@ -16,11 +16,10 @@ export class MenuPage implements OnInit {
 
   $cars: Observable<Car[]>;
   $selectedCar: Observable<Car>;
-  cars: Car[];
 
   constructor(
       private menu: MenuController,
-      private carService: CarService,
+      private carService: CarStoreService,
       private router: Router,
   ) {
     this.$cars = this.carService.findAll();
