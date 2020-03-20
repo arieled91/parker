@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {Car} from '../car/model/car.model';
-import {CarStoreService} from '../car/store/car-store.service';
+import {CarStore} from '../car/store/car.store';
 import {MenuController} from '@ionic/angular';
 
 @Component({
@@ -15,14 +15,16 @@ export class MenuPage implements OnInit {
   private mainMenu = 'main-menu';
 
   $cars: Observable<Car[]>;
+  // cars: Car[];
   $selectedCar: Observable<Car>;
 
   constructor(
       private menu: MenuController,
-      private carService: CarStoreService,
+      private carStore: CarStore,
       private router: Router,
   ) {
-    this.$cars = this.carService.findAll();
+    this.$cars = this.carStore.findAll();
+    // this.carStore.findAll().subscribe(cars => this.cars = cars);
   }
 
   ngOnInit() {

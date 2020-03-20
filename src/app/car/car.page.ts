@@ -1,23 +1,23 @@
-import {AfterViewInit, Component, OnChanges, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Car} from './model/car.model';
-import {CarStoreService} from './store/car-store.service';
-import {Router} from '@angular/router';
+import {CarStore} from './store/car.store';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-car',
   templateUrl: './car.page.html',
   styleUrls: ['./car.page.scss'],
 })
-export class CarPage implements OnInit, AfterViewInit {
+export class CarPage implements OnInit, AfterViewInit, OnDestroy {
 
   carForm: FormGroup;
   car: Car = new Car();
+  subscriptions: Subscription[] = [];
 
   constructor(
       private formBuilder: FormBuilder,
-      private carService: CarStoreService,
-      private router: Router,
+      private carStore: CarStore,
   ) {
     this.buildForm();
   }
@@ -31,13 +31,13 @@ export class CarPage implements OnInit, AfterViewInit {
       description: [null]
     });
 
-    this.carForm.valueChanges.subscribe(val => {
+    this.subscriptions.push(this.carForm.valueChanges.subscribe(val => {
       this.car.id = val.id;
       this.car.name = val.name;
       this.car.brand = val.brand;
       this.car.model = val.model;
       this.car.description = val.description;
-    });
+    }));
   }
 
   ngOnInit() {
@@ -55,8 +55,12 @@ export class CarPage implements OnInit, AfterViewInit {
 
 
   save() {
-    this.carService.insert(this.car);
+    this.carStore.create(this.car);
     // this.carService.findAll().subscribe(data => console.log(data));
     // this.router.navigate(['/']);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

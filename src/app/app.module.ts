@@ -1,20 +1,22 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {RouteReuseStrategy} from '@angular/router';
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import {AppComponent} from './app.component';
+import {AppRoutingModule} from './app-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MenuPage} from './menu/menu.page';
 import {SQLite} from '@ionic-native/sqlite/ngx';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './state/reducers';
-import { EffectsModule } from '@ngrx/effects';
-import {CarEffects} from './state/effects/car.effect';
+import {StoreModule} from '@ngrx/store';
+import {effects, metaReducers, reducers} from './store';
+import {EffectsModule} from '@ngrx/effects';
+import {IonicStorageModule} from '@ionic/storage';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import {CarEffects} from './state/effects/car.effect';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    IonicStorageModule.forRoot(),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
@@ -35,7 +38,8 @@ import {CarEffects} from './state/effects/car.effect';
         strictActionImmutability: true
       }
     }),
-    EffectsModule.forRoot([CarEffects]),
+    EffectsModule.forRoot(effects),
+    StoreDevtoolsModule.instrument()
   ],
   providers: [
     StatusBar,
