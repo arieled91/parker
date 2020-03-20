@@ -1,29 +1,24 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
 import {IonicModule} from '@ionic/angular';
-
-import {HomePageRoutingModule} from './home-routing.module';
-
-import {HomePage} from './home.page';
 import {RouterModule} from '@angular/router';
-import {CarPage} from '../car/car.page';
+import {CarPage} from './car.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
     RouterModule.forChild([
-      { path: '', component: HomePage }
+      {path: '', component: CarPage},
+      {path: ':id', component: CarPage}
     ]),
     ReactiveFormsModule,
   ],
   declarations: [
-    HomePage
+    CarPage
   ]
 })
-export class HomePageModule {
+export class CarPageModule {
 }

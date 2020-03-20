@@ -19,6 +19,18 @@ export class CarStore {
     this.store.dispatch(new CarActions.CreateCar(car));
   }
 
+  public update(car: Car): void {
+    this.store.dispatch(new CarActions.UpdateCar(car));
+  }
+
+  public save(car: Car): void {
+    if (car.id) {
+      this.update(car);
+    } else {
+      this.create(car);
+    }
+  }
+
   public select(id: string): void {
     return this.store.dispatch(new SelectCar({id}));
   }
@@ -35,26 +47,7 @@ export class CarStore {
     return this.store.select(selectAllCars);
   }
 
-  // public update(updatedCar: Car): Observable<Car> {
-  //     return this.state.pipe(
-  //         take(1),
-  //         tap(cars => {
-  //             const updateCars: Car[] = [...cars];
-  //             const carIndex = updateCars.findIndex(storedCar => storedCar.id === updatedCar.id);
-  //             if (carIndex < 0) {
-  //                 throw throwError(`Car id "${updatedCar.id}" not found`);
-  //             }
-  //             updateCars[carIndex] = updatedCar;
-  //         }),
-  //         map(() => updatedCar)
-  //     );
-  // }
-
-  // public save(car: Car): Observable<Car> {
-  //     return car.id ? this.update(car) : this.insert(car);
-  // }
-
-  delete(car: Car): void {
+  public delete(car: Car): void {
     this.store.dispatch(new CarActions.DeleteCar(car));
   }
 }

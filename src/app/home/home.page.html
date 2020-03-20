@@ -5,9 +5,16 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>Auto Seleccionado</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="editCar()">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
+  <ion-content class="ion-padding" *ngIf="(car$ | async) as car">
+    <h4>{{car.id}}</h4>
+    <h5>{{car.name}}</h5>
     <div> map form </div>
   </ion-content>
 </div>

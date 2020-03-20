@@ -5,41 +5,43 @@ import {createFeatureSelector, createSelector} from '@ngrx/store';
 const {
   selectIds,
   selectAll,
-  selectEntities
+  selectEntities,
+  selectTotal
 } = adapter.getSelectors();
 
 
 export const selectCarState = createFeatureSelector<AppState, CarState>('cars');
-
-export const getAllCars = selectAll;
-export const getCarById = selectIds;
-export const getCarEntities = selectEntities;
-export const getSelectedDeviceId = (state: CarState) => state.selectedCarId;
+export const getSelectedCarId = (state: CarState) => state.selectedCarId;
 
 
 export const selectAllCars = createSelector(
   selectCarState,
-  getAllCars
+  selectAll
 );
 
 export const selectCarById = createSelector(
   selectCarState,
-  getCarById
+  selectIds
 );
 
 export const selectCarEntities = createSelector(
   selectCarState,
-  getCarEntities
+  selectEntities
 );
 
 
 export const selectCurrentCarId = createSelector(
   selectCarState,
-  getSelectedDeviceId
+  getSelectedCarId
 );
 
 export const selectCurrentCar = createSelector(
   selectCarEntities,
   selectCurrentCarId,
   (entities, selectedId) => entities && entities[selectedId]
+);
+
+export const selectCarTotal = createSelector(
+  selectCarState,
+  selectTotal
 );

@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Car} from './model/car.model';
 import {CarStore} from './store/car.store';
 import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-car',
@@ -18,6 +20,7 @@ export class CarPage implements OnInit, AfterViewInit, OnDestroy {
   constructor(
       private formBuilder: FormBuilder,
       private carStore: CarStore,
+      private activatedRoute: ActivatedRoute
   ) {
     this.buildForm();
   }
@@ -41,6 +44,19 @@ export class CarPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.activatedRoute.paramMap.pipe(
+      map(params => params.get('id')),
+      tap(id => { if (id) { this.carStore.select(id); }}),
+      tap(id => this.populateCar(id))
+    );
+  }
+
+  private populateCar(id: string) {
+    if (id) {
+      this.subscriptions.push(this.carStore.selected().subscribe(car => this.car = car));
+    } else {
+      this.car = new Car();
+    }
   }
 
   ngAfterViewInit() {

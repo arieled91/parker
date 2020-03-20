@@ -2,13 +2,15 @@ import {Action} from '@ngrx/store';
 import {Car} from '../model/car.model';
 
 export enum CarActionType {
-  SELECT_CAR = '[Car Service] Select car',
-  LOAD_CAR = '[Car Service] Load car',
-  LOAD_CAR_SUCCESS = '[Car Service] Load car success',
-  CREATE_CAR = '[Car Service] Create car',
-  CREATE_CAR_SUCCESS = '[Car Service] Create car success',
-  DELETE_CAR = '[Car Service] Delete car',
-  DELETE_CAR_SUCCESS = '[Car Service] Delete car success'
+  SELECT_CAR = '[Car Action] Select car',
+  LOAD_CAR = '[Car Action] Load car',
+  LOAD_CAR_SUCCESS = '[Car Action] Load car success',
+  CREATE_CAR = '[Car Action] Create car',
+  CREATE_CAR_SUCCESS = '[Car Action] Create car success',
+  DELETE_CAR = '[Car Action] Delete car',
+  DELETE_CAR_SUCCESS = '[Car Action] Delete car success',
+  UPDATE_CAR = '[Car Action] Delete car',
+  UPDATE_CAR_SUCCESS = '[Car Action] Delete car success'
 }
 
 export class SelectCar implements Action {
@@ -60,4 +62,27 @@ export class DeleteCarSuccess implements Action {
   }
 }
 
-export type CarAction = CreateCar | CreateCarSuccess | DeleteCar | DeleteCarSuccess | SelectCar | LoadCar | LoadCarSuccess;
+export class UpdateCar implements Action {
+  readonly type = CarActionType.UPDATE_CAR;
+
+  constructor(public payload: Car) {
+  }
+}
+
+export class UpdateCarSuccess implements Action {
+  readonly type = CarActionType.UPDATE_CAR_SUCCESS;
+
+  constructor(public payload: Car) {
+  }
+}
+
+export type CarAction =
+  CreateCar
+  | CreateCarSuccess
+  | DeleteCar
+  | DeleteCarSuccess
+  | SelectCar
+  | LoadCar
+  | LoadCarSuccess
+  | UpdateCar
+  | UpdateCarSuccess;
