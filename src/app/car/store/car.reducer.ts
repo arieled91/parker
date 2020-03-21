@@ -55,7 +55,7 @@ export function reducer(state: CarState = initialState, action: fromCar.CarActio
       return adapter.addOne(action.payload, state);
 
     case fromCar.CarActionType.SELECT_CAR:
-      state = {...state, loading: true};
+      state = {...state, loading: false};
       return {...state, selectedCarId: action.payload.id};
 
     default:

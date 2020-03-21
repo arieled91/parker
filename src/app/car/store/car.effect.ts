@@ -1,14 +1,13 @@
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {from, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Action} from '@ngrx/store';
-import {map, switchMap, tap, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {CarActionType, CreateCar, CreateCarSuccess, LoadCar, LoadCarSuccess, UpdateCar, UpdateCarSuccess} from './car.action';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
 import {CarService} from '../service/car.service';
 import {Car} from '../model/car.model';
 import {ToastController} from '@ionic/angular';
-import * as moment from 'moment';
 
 @Injectable()
 export class CarEffects {
@@ -29,7 +28,7 @@ export class CarEffects {
     map(car => new CreateCarSuccess(car))
   );
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   public createCarSuccess$: Observable<void> = this.actions$.pipe(
     ofType(CarActionType.CREATE_CAR_SUCCESS),
     map((action: CreateCarSuccess) => action.payload),
@@ -53,7 +52,7 @@ export class CarEffects {
     map(car => new UpdateCarSuccess(car))
   );
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   public updateCarSuccess$: Observable<void> = this.actions$.pipe(
     ofType(CarActionType.UPDATE_CAR_SUCCESS),
     map((action: UpdateCarSuccess) => action.payload),

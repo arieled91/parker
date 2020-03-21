@@ -8,7 +8,7 @@ import {HomePageRoutingModule} from './home-routing.module';
 
 import {HomePage} from './home.page';
 import {RouterModule} from '@angular/router';
-import {CarPage} from '../car/car.page';
+import {AddCarPage} from '../car/pages/add-car.page';
 
 @NgModule({
   imports: [

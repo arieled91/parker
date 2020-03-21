@@ -11,10 +11,18 @@
   </ion-header>
   <ion-content>
     <ion-list *ngIf="($cars | async) as cars">
-      <ion-item *ngFor="let car of cars">{{car.name}}</ion-item>
+      <ion-item button *ngFor="let car of cars"
+                [color]="($selectedCar | async).id === car.id ? 'light' : ''"
+                (click)="selectCar(car)" >
+        <ion-icon slot="start" name="car-sport-outline"></ion-icon>
+        <ion-label>
+          <h2 style="font-size: 16pt">{{car.name}}</h2>
+          <h3>
+            <span *ngIf="car.brand">{{car.brand + " "}}</span>
+            <span *ngIf="car.model">{{car.model}}</span></h3>
+          <p style="color: grey">{{car.description}}</p>
+        </ion-label>
+      </ion-item>
     </ion-list>
-<!--    <ion-list *ngIf="cars">-->
-<!--      <ion-item *ngFor="let car of cars">{{car.name}}</ion-item>-->
-<!--    </ion-list>-->
   </ion-content>
 </ion-menu>

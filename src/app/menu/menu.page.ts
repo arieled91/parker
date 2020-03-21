@@ -15,7 +15,6 @@ export class MenuPage implements OnInit {
   private mainMenu = 'main-menu';
 
   $cars: Observable<Car[]>;
-  // cars: Car[];
   $selectedCar: Observable<Car>;
 
   constructor(
@@ -24,7 +23,7 @@ export class MenuPage implements OnInit {
       private router: Router,
   ) {
     this.$cars = this.carStore.findAll();
-    // this.carStore.findAll().subscribe(cars => this.cars = cars);
+    this.$selectedCar = this.carStore.selected();
   }
 
   ngOnInit() {
@@ -34,4 +33,7 @@ export class MenuPage implements OnInit {
     this.router.navigate(['car']).then(() => this.menu.close(this.mainMenu));
   }
 
+  selectCar(car: Car) {
+    this.carStore.select(car.id)
+  }
 }

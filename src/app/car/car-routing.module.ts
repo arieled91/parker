@@ -1,10 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CarPage} from './car.page';
+import {AddCarPage} from './pages/add-car.page';
+import {EditCarPage} from './pages/edit-car.page';
 
 const routes: Routes = [
-  {path: '', component: CarPage},
-  {path: ':id', component: CarPage}
+  {path: '', component: AddCarPage},
+  {path: ':id', component: EditCarPage}
 ];
 
 @NgModule({

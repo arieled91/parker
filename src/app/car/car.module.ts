@@ -3,21 +3,23 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {RouterModule} from '@angular/router';
-import {CarPage} from './car.page';
+import {AddCarPage} from './pages/add-car.page';
+import {CarPageRoutingModule} from './car-routing.module';
+import {CarFormViewPage} from './pages/car-form-view/car-form-view.page';
+import {EditCarPage} from './pages/edit-car.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild([
-      {path: '', component: CarPage},
-      {path: ':id', component: CarPage}
-    ]),
+    CarPageRoutingModule,
     ReactiveFormsModule,
   ],
   declarations: [
-    CarPage
+    AddCarPage,
+    EditCarPage,
+    CarFormViewPage
   ]
 })
 export class CarPageModule {

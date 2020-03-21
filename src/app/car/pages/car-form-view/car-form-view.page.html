@@ -11,7 +11,7 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-        <div [formGroup]="carForm">
+        <div [formGroup]="carForm" *ngIf="car">
             <ion-item>
                 <ion-label position="floating" color="primary">Nombre:</ion-label>
                 <ion-input formControlName="name" minlength="3" style="font-size: 20px"></ion-input>
@@ -31,7 +31,7 @@
             </ion-item>
 
             <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-                <ion-fab-button (click)="save()">
+                <ion-fab-button (click)="onSave()">
                     <ion-icon name="save-outline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>

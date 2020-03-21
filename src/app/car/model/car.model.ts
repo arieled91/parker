@@ -8,12 +8,12 @@ export class Car {
         public brand?: string,
         public model?: string,
         public description?: string,
-        public location?: Location,
+        public location?: CarLocation,
     ) {
     }
 }
 
-export class Location {
+export class CarLocation {
     constructor(
         public lat: string,
         public lon: string,
