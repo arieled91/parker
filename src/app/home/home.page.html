@@ -5,9 +5,9 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>Auto Seleccionado</ion-title>
-      <ion-buttons slot="end" *ngIf="car">
-        <ion-button (click)="editCar()">
-          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      <ion-buttons slot="end">
+        <ion-button (click)="showCarOptions($event, car)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>

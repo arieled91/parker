@@ -9,10 +9,8 @@ const {
   selectTotal
 } = adapter.getSelectors();
 
-
 export const selectCarState = createFeatureSelector<AppState, CarState>('cars');
 export const getSelectedCarId = (state: CarState) => state.selectedCarId;
-
 
 export const selectAllCars = createSelector(
   selectCarState,

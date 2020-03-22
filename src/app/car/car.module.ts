@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
-import {RouterModule} from '@angular/router';
 import {AddCarPage} from './pages/add-car.page';
 import {CarPageRoutingModule} from './car-routing.module';
 import {CarFormViewPage} from './pages/car-form-view/car-form-view.page';

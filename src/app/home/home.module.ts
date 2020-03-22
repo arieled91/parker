@@ -9,6 +9,7 @@ import {HomePageRoutingModule} from './home-routing.module';
 import {HomePage} from './home.page';
 import {RouterModule} from '@angular/router';
 import {AddCarPage} from '../car/pages/add-car.page';
+import {HomeOptionsPage} from './home-options.page';
 
 @NgModule({
   imports: [
@@ -16,13 +17,14 @@ import {AddCarPage} from '../car/pages/add-car.page';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    RouterModule.forChild([
-      { path: '', component: HomePage }
-    ]),
     ReactiveFormsModule,
   ],
   declarations: [
-    HomePage
+    HomePage,
+    HomeOptionsPage
+  ],
+  entryComponents: [
+    HomeOptionsPage
   ]
 })
 export class HomePageModule {

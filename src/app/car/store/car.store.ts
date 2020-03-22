@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Car} from '../model/car.model';
-import {selectAllCars, selectCarById, selectCurrentCar} from './car.selector';
+import {selectAllCars, selectCurrentCar} from './car.selector';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
-import * as CarActions from './car.action';
-import {LoadCar, SelectCar} from './car.action';
+import * as actions from './car.action';
+import {loadCar, selectCar} from './car.action';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +16,11 @@ export class CarStore {
   }
 
   public create(car: Car): void {
-    this.store.dispatch(new CarActions.CreateCar(car));
+    this.store.dispatch(actions.createCar({car: car}));
   }
 
   public update(car: Car): void {
-    this.store.dispatch(new CarActions.UpdateCar(car));
+    this.store.dispatch(actions.updateCar({car: car}));
   }
 
   public save(car: Car): void {
@@ -32,7 +32,7 @@ export class CarStore {
   }
 
   public select(id: string): void {
-    return this.store.dispatch(new SelectCar({id}));
+    return this.store.dispatch(selectCar({id: id}));
   }
 
   public selected(): Observable<Car> {
@@ -40,7 +40,7 @@ export class CarStore {
   }
 
   private loadById(id: string) {
-    this.store.dispatch(new LoadCar({id}));
+    this.store.dispatch(loadCar({id: id}));
   }
 
   public findAll(): Observable<Car[]> {
@@ -48,6 +48,10 @@ export class CarStore {
   }
 
   public delete(car: Car): void {
-    this.store.dispatch(new CarActions.DeleteCar(car));
+    this.store.dispatch(actions.deleteCar({car: car}));
+  }
+
+  public load(): void {
+    this.store.dispatch(actions.loadAllCars())
   }
 }

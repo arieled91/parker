@@ -30,7 +30,10 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: 'parker_db',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {

@@ -12,7 +12,7 @@
   <ion-content>
     <ion-list *ngIf="($cars | async) as cars">
       <ion-item button *ngFor="let car of cars"
-                [color]="($selectedCar | async).id === car.id ? 'light' : ''"
+                [color]="($selectedCar | async)?.id === car.id ? 'light' : ''"
                 (click)="selectCar(car)" >
         <ion-icon slot="start" name="car-sport-outline"></ion-icon>
         <ion-label>

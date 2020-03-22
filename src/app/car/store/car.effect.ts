@@ -1,13 +1,13 @@
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable} from 'rxjs';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Observable, of} from 'rxjs';
 import {Action} from '@ngrx/store';
-import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
-import {CarActionType, CreateCar, CreateCarSuccess, LoadCar, LoadCarSuccess, UpdateCar, UpdateCarSuccess} from './car.action';
+import {catchError, concatMap, map, mergeMap, tap} from 'rxjs/operators';
+import * as actions from './car.action';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
 import {CarService} from '../service/car.service';
-import {Car} from '../model/car.model';
 import {ToastController} from '@ionic/angular';
+import {Car} from '../model/car.model';
 
 @Injectable()
 export class CarEffects {
@@ -20,59 +20,133 @@ export class CarEffects {
   ) {
   }
 
-  @Effect()
-  public createCar$: Observable<Action> = this.actions$.pipe(
-    ofType(CarActionType.CREATE_CAR),
-    map((action: CreateCar) => action.payload),
-    switchMap(car => this.createCar(car)),
-    map(car => new CreateCarSuccess(car))
+  loadAllCars$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadAllCars),
+      mergeMap(() =>
+        this.carService.findAll().pipe(
+          map((data: Car[]) => {
+            return actions.loadAllCarsSuccess({car: data});
+          }),
+          catchError((error: Error) => {
+            return of(actions.carActionFail(error));
+          })
+        )
+      )
+    )
   );
 
-  @Effect({dispatch: false})
-  public createCarSuccess$: Observable<void> = this.actions$.pipe(
-    ofType(CarActionType.CREATE_CAR_SUCCESS),
-    map((action: CreateCarSuccess) => action.payload),
-    tap(() => this.router.navigate(['/'])),
-    mergeMap(() => [this.showInfoToast('Guardado')])
+  deleteCar$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteCar),
+      mergeMap(action =>
+        this.carService.delete(action.car).pipe(
+          map((data: Car) => {
+            return actions.deleteCarSuccess({car: data});
+          }),
+          catchError((error: Error) => {
+            return of(actions.carActionFail(error));
+          })
+        )
+      )
+    )
   );
 
-  @Effect()
-  public loadCar$: Observable<Action> = this.actions$.pipe(
-    ofType<LoadCar>(CarActionType.LOAD_CAR),
-    map(action => action.payload),
-    switchMap(payload => this.carService.find(payload.id)),
-    map(car => new LoadCarSuccess(car))
+  deleteCarSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteCarSuccess),
+      tap(() => this.showInfoToast('Eliminado')),
+      map(() => actions.loadAllCars())
+    ),
+    { dispatch: false }
   );
 
-  @Effect()
-  public updateCar$: Observable<Action> = this.actions$.pipe(
-    ofType(CarActionType.UPDATE_CAR),
-    map((action: UpdateCar) => action.payload),
-    switchMap(car => this.updateCar(car)),
-    map(car => new UpdateCarSuccess(car))
+  createCar$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.createCar),
+      mergeMap(action =>
+        this.carService.create(action.car).pipe(
+          map((data: Car) => {
+            return actions.createCarSuccess({car: data});
+          }),
+          catchError((error: Error) => {
+            return of(actions.carActionFail(error));
+          })
+        )
+      )
+    )
   );
 
-  @Effect({dispatch: false})
-  public updateCarSuccess$: Observable<void> = this.actions$.pipe(
-    ofType(CarActionType.UPDATE_CAR_SUCCESS),
-    map((action: UpdateCarSuccess) => action.payload),
-    tap(() => this.router.navigate(['/'])),
-    mergeMap(() => [this.showInfoToast('Guardado')])
+  createCarSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.createCarSuccess),
+      tap(() => {
+        this.router.navigate(['/']);
+        this.showInfoToast('Creado');
+      }),
+    ),
+    { dispatch: false }
   );
 
-  private createCar(car: Car): Observable<Car> {
-    return new Observable<Car>(subs => {
-      this.carService.create(car).then(data => subs.next(data));
-    });
-  }
+  loadCar$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadCar),
+      mergeMap(action =>
+        this.carService.find(action.id).pipe(
+          map((data: Car) => {
+            return actions.loadCarSuccess({car: data});
+          }),
+          catchError((error: Error) => {
+            return of(actions.carActionFail(error));
+          })
+        )
+      )
+    )
+  );
 
-  private updateCar(car: Car): Observable<Car> {
-    return new Observable<Car>(subs => {
-      this.carService.update(car).then(data => subs.next(data));
-    });
-  }
+  updateCar$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateCar),
+      mergeMap(action =>
+        this.carService.update(action.car).pipe(
+          map((data: Car) => {
+            return actions.updateCarSuccess({car: data});
+          }),
+          catchError((error: Error) => {
+            return of(actions.carActionFail(error));
+          })
+        )
+      )
+    )
+  );
+
+  updateCarSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateCarSuccess),
+      tap(() => {
+        this.router.navigate(['/']);
+        this.showInfoToast('Guardado');
+      })
+    ),
+    { dispatch: false }
+  );
+
+  carActionFail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.carActionFail),
+      tap(() => {
+        this.showInfoToast('Guardado');
+      })
+    ),
+    { dispatch: false }
+  );
 
   private showInfoToast(message: string, duration: number = 4000) {
     this.toastController.create({message, duration}).then(toast => toast.present());
   }
+
+  private showErrorToast(message: string, duration: number = 8000) {
+    this.toastController.create({message, duration, color: 'danger'}).then(toast => toast.present());
+  }
+
 }

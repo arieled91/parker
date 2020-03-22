@@ -22,18 +22,20 @@ export class MenuPage implements OnInit {
       private carStore: CarStore,
       private router: Router,
   ) {
+  }
+
+  ngOnInit() {
     this.$cars = this.carStore.findAll();
     this.$selectedCar = this.carStore.selected();
   }
 
-  ngOnInit() {
-  }
-
   addCar() {
-    this.router.navigate(['car']).then(() => this.menu.close(this.mainMenu));
+    this.router.navigate(['car'])
+      .then(() => this.menu.close(this.mainMenu));
   }
 
   selectCar(car: Car) {
-    this.carStore.select(car.id)
+    this.carStore.select(car.id);
+    this.menu.close(this.mainMenu);
   }
 }

@@ -1,88 +1,62 @@
-import {Action} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import {Car} from '../model/car.model';
 
-export enum CarActionType {
-  SELECT_CAR = '[Car Action] Select car',
-  LOAD_CAR = '[Car Action] Load car',
-  LOAD_CAR_SUCCESS = '[Car Action] Load car success',
-  CREATE_CAR = '[Car Action] Create car',
-  CREATE_CAR_SUCCESS = '[Car Action] Create car success',
-  DELETE_CAR = '[Car Action] Delete car',
-  DELETE_CAR_SUCCESS = '[Car Action] Delete car success',
-  UPDATE_CAR = '[Car Action] Delete car',
-  UPDATE_CAR_SUCCESS = '[Car Action] Delete car success'
-}
+export const selectCar = createAction(
+  '[Car Action] Select car',
+  props<{id: string}>()
+);
 
-export class SelectCar implements Action {
-  readonly type = CarActionType.SELECT_CAR;
+export const loadAllCars = createAction(
+  '[Car Action] Load all cars'
+);
 
-  constructor(public payload: { id: string }) {
-  }
-}
+export const loadAllCarsSuccess = createAction(
+  '[Car Action] Load all cars success',
+  props<{car: Car[]}>()
+);
 
-export class LoadCar implements Action {
-  readonly type = CarActionType.LOAD_CAR;
+export const loadCar = createAction(
+  '[Car Action] Load car',
+  props<{id: string }>()
+);
 
-  constructor(public payload: { id: string }) {
-  }
-}
+export const loadCarSuccess = createAction(
+  '[Car Action] Load car success',
+  props<{car: Car}>()
+);
 
-export class LoadCarSuccess implements Action {
-  readonly type = CarActionType.LOAD_CAR_SUCCESS;
 
-  constructor(public payload: Car) {
-  }
-}
+export const createCar = createAction(
+  '[Car Action] Create car',
+  props<{car: Car}>()
+);
 
-export class CreateCar implements Action {
-  readonly type = CarActionType.CREATE_CAR;
+export const createCarSuccess = createAction(
+  '[Car Action] Create car success',
+  props<{car: Car}>()
+);
 
-  constructor(public payload: Car) {
-  }
-}
+export const deleteCar = createAction(
+  '[Car Action] Delete car',
+  props<{car: Car}>()
+);
 
-export class CreateCarSuccess implements Action {
-  readonly type = CarActionType.CREATE_CAR_SUCCESS;
+export const deleteCarSuccess = createAction(
+  '[Car Action] Delete car success',
+  props<{car: Car}>()
+);
 
-  constructor(public payload: Car) {
-  }
-}
+export const updateCar = createAction(
+  '[Car Action] Update car',
+  props<{car: Car}>()
+);
 
-export class DeleteCar implements Action {
-  readonly type = CarActionType.DELETE_CAR;
+export const updateCarSuccess = createAction(
+  '[Car Action] Update car success',
+  props<{car: Car}>()
+);
 
-  constructor(public payload: Car) {
-  }
-}
-
-export class DeleteCarSuccess implements Action {
-  readonly type = CarActionType.DELETE_CAR_SUCCESS;
-
-  constructor(public payload: Car) {
-  }
-}
-
-export class UpdateCar implements Action {
-  readonly type = CarActionType.UPDATE_CAR;
-
-  constructor(public payload: Car) {
-  }
-}
-
-export class UpdateCarSuccess implements Action {
-  readonly type = CarActionType.UPDATE_CAR_SUCCESS;
-
-  constructor(public payload: Car) {
-  }
-}
-
-export type CarAction =
-  CreateCar
-  | CreateCarSuccess
-  | DeleteCar
-  | DeleteCarSuccess
-  | SelectCar
-  | LoadCar
-  | LoadCarSuccess
-  | UpdateCar
-  | UpdateCarSuccess;
+export const carActionFail = createAction(
+  '[Car Action] - Fail',
+  props<Error>()
+);

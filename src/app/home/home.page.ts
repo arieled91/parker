@@ -3,6 +3,9 @@ import {CarStore} from '../car/store/car.store';
 import {Observable, Subscription} from 'rxjs';
 import {Car} from '../car/model/car.model';
 import {Router} from '@angular/router';
+import {PopoverController} from '@ionic/angular';
+import {HomeOptionsPage} from './home-options.page';
+import {map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-index',
@@ -16,8 +19,17 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private carStore: CarStore,
-    private router: Router
-  ) { }
+    private router: Router,
+    private popoverController: PopoverController
+  ) {
+    this.carStore.load();
+    // this.subscriptions.push(this.carStore.findAll().pipe(
+    //   map(cars => cars[0]),
+    //   tap(car => {
+    //     if(car) {this.carStore.select(car.id)}
+    //   })
+    // ).subscribe())
+  }
 
   ngOnInit() {
     this.subscriptions.push(this.carStore.selected().subscribe(car => this.car = car));
@@ -29,5 +41,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  async showCarOptions(event: any, car: Car) {
+    const popover = await this.popoverController.create({
+      component: HomeOptionsPage,
+      componentProps: {car: car, controller: this.popoverController},
+      event: event,
+      translucent: true,
+      backdropDismiss: true
+    });
+    return await popover.present();
   }
 }

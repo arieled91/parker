@@ -1,18 +1,19 @@
-import * as fromCar from './car.action';
+import * as actions from './car.action';
 import {Car} from '../model/car.model';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import * as moment from 'moment';
+import {Action, createReducer, on} from '@ngrx/store';
 
 export interface CarState extends EntityState<Car> {
   data: Car[];
   loading: boolean;
   selectedCarId: string;
+  carError: Error;
 }
 
 const carComparer = (a: Car, b: Car) =>
   a.modified ? b.modified - a.modified : // last updated first
     a.name ? a.name.localeCompare(b.name) : // then by name
-      a.id.localeCompare(b.id); // by id as last resource
+      0; //
 
 export const adapter: EntityAdapter<Car> = createEntityAdapter<Car>(
   {
@@ -24,41 +25,57 @@ export const adapter: EntityAdapter<Car> = createEntityAdapter<Car>(
 export const initialState: CarState = adapter.getInitialState({
   data: [],
   loading: false,
-  selectedCarId: null
+  selectedCarId: null,
+  carError: null
 });
 
-export function reducer(state: CarState = initialState, action: fromCar.CarAction): CarState {
-  switch (action.type) {
-    case fromCar.CarActionType.CREATE_CAR:
-      return {...state, loading: true};
+const reducer = createReducer(
+  initialState,
+  on(actions.createCar, state => {
+    return {...state, loading: true};
+  }),
+  on(actions.createCarSuccess, (state, action) => {
+    state = {...state, loading: false};
+    return adapter.addOne(action.car, state);
+  }),
+  on(actions.updateCar, state => {
+    return {...state, loading: true};
+  }),
+  on(actions.updateCarSuccess, (state, action) => {
+    state = {...state, loading: false};
+    return adapter.updateOne({
+      id: action.car.id,
+      changes: action.car
+    }, state);
+  }),
+  on(actions.deleteCar, state => {
+    return {...state, loading: true};
+  }),
+  on(actions.deleteCarSuccess, (state, action) => {
+    state = {...state, loading: false};
+    return adapter.removeOne(action.car.id, state);
+  }),
+  on(actions.loadCarSuccess, (state, action) => {
+    state = {...state, loading: false};
+    return adapter.addOne(action.car, state);
+  }),
+  on(actions.selectCar, (state, action) => {
+    state = {...state, loading: false};
+    return {...state, selectedCarId: action.id};
+  }),
+  on(actions.loadAllCars, state => {
+    return {...state, loading: true};
+  }),
+  on(actions.loadAllCarsSuccess, (state, action) => {
+    state = {...state, loading: false};
+    return adapter.addAll(action.car, state);
+  }),
+  on(actions.carActionFail, (state, error) => {
+    console.log(error);
+    return {...state, carError: error}
+  })
+);
 
-    case fromCar.CarActionType.CREATE_CAR_SUCCESS:
-      state = {...state, loading: false, selectedCarId: action.payload.id};
-      return adapter.addOne(action.payload, state);
-
-    case fromCar.CarActionType.UPDATE_CAR:
-      return {...state, loading: true};
-
-    case fromCar.CarActionType.UPDATE_CAR_SUCCESS:
-      state = {...state, loading: false};
-      return adapter.updateOne({
-        id: action.payload.id,
-        changes: action.payload
-      }, state);
-
-    case fromCar.CarActionType.DELETE_CAR_SUCCESS:
-      state = {...state, loading: false};
-      return adapter.removeOne(action.payload.id, state);
-
-    case fromCar.CarActionType.LOAD_CAR_SUCCESS:
-      state = {...state, loading: false};
-      return adapter.addOne(action.payload, state);
-
-    case fromCar.CarActionType.SELECT_CAR:
-      state = {...state, loading: false};
-      return {...state, selectedCarId: action.payload.id};
-
-    default:
-      return state;
-  }
+export function carReducer(state: CarState | undefined, action: Action) {
+  return reducer(state, action);
 }

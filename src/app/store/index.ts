@@ -1,16 +1,17 @@
 import {ActionReducerMap, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
-import * as fromCar from '../car/store/car.reducer';
+import {CarState} from '../car/store/car.reducer';
 import {CarEffects} from '../car/store/car.effect';
+import {carReducer} from '../car/store/car.reducer';
 
 // Add all state interfaces here
 export interface AppState {
-  cars: fromCar.CarState;
+  cars: CarState;
 }
 
 // Add all reducers interface here
 export const reducers: ActionReducerMap<AppState> = {
-  cars: fromCar.reducer
+  cars: carReducer
 };
 
 // Add all effects here
