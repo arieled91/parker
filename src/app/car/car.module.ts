@@ -2,10 +2,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
-import {AddCarPage} from './pages/add-car.page';
+import {CarAddPage} from './components/car-add-page/car-add.page';
 import {CarPageRoutingModule} from './car-routing.module';
-import {CarFormViewPage} from './pages/car-form-view/car-form-view.page';
-import {EditCarPage} from './pages/edit-car.page';
+import {CarFormComponent} from './components/car-form/car-form.component';
+import {CarEditPage} from './components/car-edit-page/car-edit.page';
 
 @NgModule({
   imports: [
@@ -16,9 +16,9 @@ import {EditCarPage} from './pages/edit-car.page';
     ReactiveFormsModule,
   ],
   declarations: [
-    AddCarPage,
-    EditCarPage,
-    CarFormViewPage
+    CarAddPage,
+    CarEditPage,
+    CarFormComponent
   ]
 })
 export class CarPageModule {

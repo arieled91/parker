@@ -6,10 +6,11 @@ import {IonicModule} from '@ionic/angular';
 
 import {HomePageRoutingModule} from './home-routing.module';
 
-import {HomePage} from './home.page';
+import {HomePage} from './home-page/home.page';
 import {RouterModule} from '@angular/router';
-import {AddCarPage} from '../car/pages/add-car.page';
-import {HomeOptionsPage} from './home-options.page';
+import {CarAddPage} from '../car/components/car-add-page/car-add.page';
+import {HomeOptionsComponent} from './home-options/home-options.component';
+import {MapComponent} from '../location/map/map.component';
 
 @NgModule({
   imports: [
@@ -21,10 +22,12 @@ import {HomeOptionsPage} from './home-options.page';
   ],
   declarations: [
     HomePage,
-    HomeOptionsPage
+    HomeOptionsComponent,
+    MapComponent,
   ],
   entryComponents: [
-    HomeOptionsPage
+    HomeOptionsComponent,
+
   ]
 })
 export class HomePageModule {

@@ -1,0 +1,14 @@
+.center{
+  display: inline-block;
+  text-align: center;
+}
+
+.homeGrid{
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.expandRow{
+  flex-grow: 1;
+}

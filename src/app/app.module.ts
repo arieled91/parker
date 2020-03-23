@@ -16,12 +16,15 @@ import {effects, metaReducers, reducers} from './store';
 import {EffectsModule} from '@ngrx/effects';
 import {IonicStorageModule} from '@ionic/storage';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {MapComponent} from './location/map/map.component';
+import {Geolocation} from '@ionic-native/geolocation';
+import {GeolocationPluginWeb} from '@capacitor/core';
 
 
 @NgModule({
   declarations: [
-      AppComponent,
-      MenuPage
+    AppComponent,
+    MenuPage
   ],
   entryComponents: [],
   imports: [
@@ -48,8 +51,9 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
     StatusBar,
     SplashScreen,
     SQLite,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

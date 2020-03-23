@@ -37,5 +37,6 @@ export class MenuPage implements OnInit {
   selectCar(car: Car) {
     this.carStore.select(car.id);
     this.menu.close(this.mainMenu);
+    this.router.navigate(['/']);
   }
 }

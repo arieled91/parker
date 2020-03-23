@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {Car} from '../car/model/car.model';
+import {Car} from '../../car/model/car.model';
 import {NavParams, PopoverController} from '@ionic/angular';
 import {Router} from '@angular/router';
-import {CarStore} from '../car/store/car.store';
+import {CarStore} from '../../car/store/car.store';
 
 @Component({
   selector: 'home-options-page',
@@ -24,7 +24,7 @@ import {CarStore} from '../car/store/car.store';
       </ion-list>
   `,
 })
-export class HomeOptionsPage {
+export class HomeOptionsComponent {
 
   @Input() car: Car;
   @Input() controller: PopoverController;

@@ -6,23 +6,28 @@ import * as actions from './car.action';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
 import {CarService} from '../service/car.service';
-import {ToastController} from '@ionic/angular';
+import {LoadingController, ToastController} from '@ionic/angular';
 import {Car} from '../model/car.model';
 
 @Injectable()
 export class CarEffects {
 
+  loading: HTMLIonLoadingElement;
+
   constructor(
     private actions$: Actions,
     private router: Router,
     private carService: CarService,
-    public toastController: ToastController
+    private toastController: ToastController,
+    private loadingController: LoadingController
   ) {
+    this.initLoading();
   }
 
   loadAllCars$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadAllCars),
+      tap(() => this.presentLoading()),
       mergeMap(() =>
         this.carService.findAll().pipe(
           map((data: Car[]) => {
@@ -36,9 +41,18 @@ export class CarEffects {
     )
   );
 
+  loadAllCarsSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(actions.loadAllCarsSuccess),
+        tap(() => this.dismissLoading())
+      ),
+    { dispatch: false }
+  );
+
   deleteCar$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteCar),
+      tap(() => this.presentLoading()),
       mergeMap(action =>
         this.carService.delete(action.car).pipe(
           map((data: Car) => {
@@ -55,7 +69,10 @@ export class CarEffects {
   deleteCarSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteCarSuccess),
-      tap(() => this.showInfoToast('Eliminado')),
+      tap(() => {
+        this.dismissLoading();
+        this.showInfoToast('Eliminado')
+      }),
       map(() => actions.loadAllCars())
     ),
     { dispatch: false }
@@ -64,6 +81,7 @@ export class CarEffects {
   createCar$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createCar),
+      tap(() => this.presentLoading()),
       mergeMap(action =>
         this.carService.create(action.car).pipe(
           map((data: Car) => {
@@ -81,6 +99,7 @@ export class CarEffects {
     this.actions$.pipe(
       ofType(actions.createCarSuccess),
       tap(() => {
+        this.dismissLoading();
         this.router.navigate(['/']);
         this.showInfoToast('Creado');
       }),
@@ -91,6 +110,7 @@ export class CarEffects {
   loadCar$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadCar),
+      tap(() => this.presentLoading()),
       mergeMap(action =>
         this.carService.find(action.id).pipe(
           map((data: Car) => {
@@ -104,9 +124,18 @@ export class CarEffects {
     )
   );
 
+  loadCarSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(actions.loadCarSuccess),
+        tap(() => this.dismissLoading())
+      ),
+    { dispatch: false }
+  );
+
   updateCar$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.updateCar),
+      tap(() => this.presentLoading()),
       mergeMap(action =>
         this.carService.update(action.car).pipe(
           map((data: Car) => {
@@ -124,6 +153,7 @@ export class CarEffects {
     this.actions$.pipe(
       ofType(actions.updateCarSuccess),
       tap(() => {
+        this.dismissLoading();
         this.router.navigate(['/']);
         this.showInfoToast('Guardado');
       })
@@ -134,8 +164,9 @@ export class CarEffects {
   carActionFail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.carActionFail),
-      tap(() => {
-        this.showInfoToast('Guardado');
+      tap(error => {
+        this.dismissLoading();
+        this.showInfoToast('Error inesperado: '+error.message);
       })
     ),
     { dispatch: false }
@@ -147,6 +178,21 @@ export class CarEffects {
 
   private showErrorToast(message: string, duration: number = 8000) {
     this.toastController.create({message, duration, color: 'danger'}).then(toast => toast.present());
+  }
+
+  async initLoading(){
+    this.loading = await this.loadingController.create({
+      message: 'Cargando...',
+      duration: 999999
+    });
+  }
+
+  async presentLoading() {
+    if(this.loading) await this.loading.present();
+  }
+
+  async dismissLoading() {
+    if(this.loading) await this.loading.dismiss();
   }
 
 }

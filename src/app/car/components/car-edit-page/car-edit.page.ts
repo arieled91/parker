@@ -1,18 +1,18 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Car} from '../model/car.model';
-import {CarStore} from '../store/car.store';
+import {Car} from '../../model/car.model';
+import {CarStore} from '../../store/car.store';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
-  selector: 'edit-car-page',
+  selector: 'car-edit-page',
   template: `
-      <app-car-form-view [car]="$car | async" (save)="onSave($event)"></app-car-form-view>
+      <app-car-form-view [title]="'Editar Auto'" [car]="$car | async" (save)="onSave($event)"></app-car-form-view>
   `,
 })
-export class EditCarPage implements OnInit {
+export class CarEditPage implements OnInit {
 
   $car: Observable<Car>;
 

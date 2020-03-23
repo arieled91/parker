@@ -8,11 +8,12 @@ import {CarStore} from '../../store/car.store';
 
 @Component({
   selector: 'app-car-form-view',
-  templateUrl: './car-form-view.page.html',
-  styleUrls: ['./car-form-view.page.scss'],
+  templateUrl: './car-form.component.html',
+  styleUrls: ['./car-form.component.scss'],
 })
-export class CarFormViewPage implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class CarFormComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
+  @Input() title = 'Auto';
   private _car: Car;
   @Output() save = new EventEmitter<Car>();
 

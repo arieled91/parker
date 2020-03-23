@@ -16,7 +16,7 @@
                 (click)="selectCar(car)" >
         <ion-icon slot="start" name="car-sport-outline"></ion-icon>
         <ion-label>
-          <h2 style="font-size: 16pt">{{car.name}}</h2>
+          <h2 style="font-size: 16pt" class="ion-text-capitalize">{{car.name}}</h2>
           <h3>
             <span *ngIf="car.brand">{{car.brand + " "}}</span>
             <span *ngIf="car.model">{{car.model}}</span></h3>

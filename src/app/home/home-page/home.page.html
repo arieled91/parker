@@ -1,0 +1,33 @@
+<div class="ion-page" id="main">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title *ngIf="car" class="ion-text-capitalize">{{car?.name}}</ion-title>
+      <ion-title *ngIf="!car">Parker</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="showCarOptions($event, car)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding" *ngIf="car">
+    <ion-grid class="homeGrid">
+      <ion-row class="expandRow"><ion-col>
+        <app-map
+                [markLat]="car.location?.lat"
+                [markLon]="car.location?.lon"
+                [markDesc]="car.name"></app-map>
+        </ion-col></ion-row>
+
+      <ion-row><ion-col class="center">
+        <p *ngIf="car.location">{{car.location?.lat + " "+car.location?.lon }}</p>
+        <ion-button size="large" (click)="saveLocation()">Guardar Ubicación</ion-button>
+      </ion-col></ion-row>
+
+    </ion-grid>
+  </ion-content>
+</div>

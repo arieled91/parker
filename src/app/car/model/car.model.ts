@@ -15,10 +15,10 @@ export class Car {
 
 export class CarLocation {
     constructor(
-        public lat: string,
-        public lon: string,
-        public address: string,
-        public description: string
+        public lat: number,
+        public lon: number,
+        public address?: string,
+        public description?: string
     ) {
     }
 }
