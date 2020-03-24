@@ -51,13 +51,15 @@ export class HomePage implements OnInit, OnDestroy {
 
   saveLocation() {
     this.loading.present();
-    LocationUtils.getPosition().then((position: Position) => {
-      this.loading.dismiss();
-      let car = {...this.car, location: new CarLocation(position.coords.latitude, position.coords.longitude)};
-      this.carStore.update(car);
-    }).catch(error => {
-      this.loading.dismiss();
-      console.log(error)
+    LocationUtils.getPosition().subscribe(
+      (position: Position) => {
+        this.loading.dismiss();
+        let car = {...this.car, location: new CarLocation(position.coords.latitude, position.coords.longitude)};
+        this.carStore.update(car);
+    },
+      error => {
+        this.loading.dismiss();
+        console.log(error)
     });
 
   }

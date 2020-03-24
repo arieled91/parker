@@ -11,6 +11,8 @@ import {RouterModule} from '@angular/router';
 import {CarAddPage} from '../car/components/car-add-page/car-add.page';
 import {HomeOptionsComponent} from './home-options/home-options.component';
 import {MapComponent} from '../location/map/map.component';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {ParkerMapDirective} from '../location/map/map.directive';
 
 @NgModule({
   imports: [
@@ -19,11 +21,13 @@ import {MapComponent} from '../location/map/map.component';
     IonicModule,
     HomePageRoutingModule,
     ReactiveFormsModule,
+    LeafletModule,
   ],
   declarations: [
     HomePage,
     HomeOptionsComponent,
     MapComponent,
+    ParkerMapDirective,
   ],
   entryComponents: [
     HomeOptionsComponent,

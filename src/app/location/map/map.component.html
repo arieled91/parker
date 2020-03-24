@@ -1,2 +1,7 @@
-<h2>Mapa</h2>
-<div id="map" class="map map-home"></div>
+<div class="map"
+     leaflet parkerMap
+     [leafletOptions]="options"
+     [(leafletCenter)]="position"
+     [(leafletZoom)]="zoom"
+><ion-spinner class="spinner"></ion-spinner>
+</div>

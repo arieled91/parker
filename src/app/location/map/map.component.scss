@@ -1,7 +1,14 @@
 #parkingMap { height: 300px; }
 
-#map{
-  //margin:12px 0 12px 0;
+.map{
+  margin:12px 0 12px 0;
   min-height:250px;
-  height: 92%;
+  height: 100%;
+}
+
+.spinner{
+  margin: auto;
+  display: block;
+  top: 50%;
+  bottom: 50%;
 }

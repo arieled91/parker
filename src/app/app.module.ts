@@ -16,9 +16,7 @@ import {effects, metaReducers, reducers} from './store';
 import {EffectsModule} from '@ngrx/effects';
 import {IonicStorageModule} from '@ionic/storage';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {MapComponent} from './location/map/map.component';
-import {Geolocation} from '@ionic-native/geolocation';
-import {GeolocationPluginWeb} from '@capacitor/core';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 
 
 @NgModule({
@@ -45,7 +43,8 @@ import {GeolocationPluginWeb} from '@capacitor/core';
       }
     }),
     EffectsModule.forRoot(effects),
-    StoreDevtoolsModule.instrument()
+    StoreDevtoolsModule.instrument(),
+    LeafletModule.forRoot()
   ],
   providers: [
     StatusBar,

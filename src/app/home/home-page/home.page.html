@@ -16,8 +16,8 @@
 
   <ion-content class="ion-padding" *ngIf="car">
     <ion-grid class="homeGrid">
-      <ion-row class="expandRow"><ion-col>
-        <app-map
+      <ion-row class="expandRow margin-bottom-20"><ion-col>
+        <app-map class="map"
                 [markLat]="car.location?.lat"
                 [markLon]="car.location?.lon"
                 [markDesc]="car.name"></app-map>
