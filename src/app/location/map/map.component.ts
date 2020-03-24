@@ -39,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.map.destroy();
+    if(this.map) this.map.remove();
   }
 
 

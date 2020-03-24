@@ -1,6 +1,7 @@
 import * as moment from 'moment';
+import {Storable} from '../../common/storage.service';
 
-export class Car {
+export class Car implements Storable{
     constructor(
         public id: string = null,
         public name: string = null,
@@ -22,3 +23,8 @@ export class CarLocation {
     ) {
     }
 }
+
+export const carComparer = (a: Car, b: Car) =>
+  a.modified ? b.modified - a.modified : // last updated first
+    a.name ? a.name.localeCompare(b.name) : // then by name
+      0;

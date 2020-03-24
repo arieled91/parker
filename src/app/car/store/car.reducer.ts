@@ -1,5 +1,5 @@
 import * as actions from './car.action';
-import {Car} from '../model/car.model';
+import {Car, carComparer} from '../model/car.model';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Action, createReducer, on} from '@ngrx/store';
 
@@ -9,11 +9,6 @@ export interface CarState extends EntityState<Car> {
   selectedCarId: string;
   carError: Error;
 }
-
-const carComparer = (a: Car, b: Car) =>
-  a.modified ? b.modified - a.modified : // last updated first
-    a.name ? a.name.localeCompare(b.name) : // then by name
-      0; //
 
 export const adapter: EntityAdapter<Car> = createEntityAdapter<Car>(
   {

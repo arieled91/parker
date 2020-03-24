@@ -1,7 +1,6 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
-import {Action} from '@ngrx/store';
-import {catchError, concatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import * as actions from './car.action';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
@@ -46,7 +45,7 @@ export class CarEffects {
         ofType(actions.loadAllCarsSuccess),
         tap(() => this.dismissLoading())
       ),
-    { dispatch: false }
+    {dispatch: false}
   );
 
   deleteCar$ = createEffect(() =>
@@ -67,15 +66,15 @@ export class CarEffects {
   );
 
   deleteCarSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.deleteCarSuccess),
-      tap(() => {
-        this.dismissLoading();
-        this.showInfoToast('Eliminado')
-      }),
-      map(() => actions.loadAllCars())
-    ),
-    { dispatch: false }
+      this.actions$.pipe(
+        ofType(actions.deleteCarSuccess),
+        tap(() => {
+          this.dismissLoading();
+          this.showInfoToast('Eliminado');
+        }),
+        // map(() => actions.loadAllCars())
+      ),
+    {dispatch: false}
   );
 
   createCar$ = createEffect(() =>
@@ -96,15 +95,15 @@ export class CarEffects {
   );
 
   createCarSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.createCarSuccess),
-      tap(() => {
-        this.dismissLoading();
-        this.router.navigate(['/']);
-        this.showInfoToast('Creado');
-      }),
-    ),
-    { dispatch: false }
+      this.actions$.pipe(
+        ofType(actions.createCarSuccess),
+        tap(() => {
+          this.dismissLoading();
+          this.router.navigate(['/']);
+          this.showInfoToast('Creado');
+        }),
+      ),
+    {dispatch: false}
   );
 
   loadCar$ = createEffect(() =>
@@ -129,7 +128,7 @@ export class CarEffects {
         ofType(actions.loadCarSuccess),
         tap(() => this.dismissLoading())
       ),
-    { dispatch: false }
+    {dispatch: false}
   );
 
   updateCar$ = createEffect(() =>
@@ -150,26 +149,26 @@ export class CarEffects {
   );
 
   updateCarSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.updateCarSuccess),
-      tap(() => {
-        this.dismissLoading();
-        this.router.navigate(['/']);
-        this.showInfoToast('Guardado');
-      })
-    ),
-    { dispatch: false }
+      this.actions$.pipe(
+        ofType(actions.updateCarSuccess),
+        tap(() => {
+          this.dismissLoading();
+          this.router.navigate(['/']);
+          this.showInfoToast('Guardado');
+        })
+      ),
+    {dispatch: false}
   );
 
   carActionFail$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.carActionFail),
-      tap(error => {
-        this.dismissLoading();
-        this.showInfoToast('Error inesperado: '+error.message);
-      })
-    ),
-    { dispatch: false }
+      this.actions$.pipe(
+        ofType(actions.carActionFail),
+        tap(error => {
+          this.dismissLoading();
+          this.showErrorToast('Error inesperado: ' + (error.message ? error.message : error.stack));
+        })
+      ),
+    {dispatch: false}
   );
 
   private showInfoToast(message: string, duration: number = 4000) {
@@ -180,7 +179,7 @@ export class CarEffects {
     this.toastController.create({message, duration, color: 'danger'}).then(toast => toast.present());
   }
 
-  async initLoading(){
+  async initLoading() {
     this.loading = await this.loadingController.create({
       message: 'Cargando...',
       duration: 999999
@@ -188,11 +187,15 @@ export class CarEffects {
   }
 
   async presentLoading() {
-    if(this.loading) await this.loading.present();
+    if (this.loading) {
+      await this.loading.present();
+    }
   }
 
   async dismissLoading() {
-    if(this.loading) await this.loading.dismiss();
+    if (this.loading) {
+      await this.loading.dismiss();
+    }
   }
 
 }

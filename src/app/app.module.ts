@@ -35,7 +35,7 @@ import {GeolocationPluginWeb} from '@capacitor/core';
     ReactiveFormsModule,
     IonicStorageModule.forRoot({
       name: 'parker_db',
-      driverOrder: ['indexeddb', 'sqlite', 'websql']
+      // driverOrder: ['indexeddb', 'sqlite', 'websql']
     }),
     StoreModule.forRoot(reducers, {
       metaReducers,
