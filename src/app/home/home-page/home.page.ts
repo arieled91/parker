@@ -14,7 +14,7 @@ import {LocationUtils} from '../../location/location.utils';
 })
 export class HomePage implements OnInit, OnDestroy {
 
-  private car: Car;
+  car: Car;
   private subscriptions: Subscription[] = [];
   loading: HTMLIonLoadingElement;
   parkInfo: string = null;

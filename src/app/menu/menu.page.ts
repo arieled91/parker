@@ -12,7 +12,7 @@ import {MenuController} from '@ionic/angular';
 })
 export class MenuPage implements OnInit {
 
-  private mainMenu = 'main-menu';
+  mainMenu = 'main-menu';
 
   $cars: Observable<Car[]>;
   $selectedCar: Observable<Car>;

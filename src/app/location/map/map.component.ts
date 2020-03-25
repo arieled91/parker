@@ -14,10 +14,10 @@ export class MapComponent implements OnInit {
   @Input() markDesc: string;
   @Input() tyleLayer: string = 'osm';
 
-  private position: LatLng;
-  private zoom: number;
-  private options: MapOptions = this.buildOptions();
-  private layers;
+  position: LatLng;
+  zoom: number;
+  options: MapOptions = this.buildOptions();
+  layers;
 
 
   constructor() {
