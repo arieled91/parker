@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LocationUtils} from '../location.utils';
-import {LatLng, latLng, MapOptions, tileLayer} from 'leaflet';
+import {icon, LatLng, latLng, Layer, MapOptions, marker, tileLayer} from 'leaflet';
 
 @Component({
   selector: 'app-map',
@@ -16,15 +16,16 @@ export class MapComponent implements OnInit {
 
   private position: LatLng;
   private zoom: number;
-  private options: MapOptions;
+  private options: MapOptions = this.buildOptions();
+  private layers;
 
 
   constructor() {
-    this.initOptions();
   }
 
   ngOnInit() {
     this.center();
+    this.initLayers();
   }
 
   private center() {
@@ -34,10 +35,10 @@ export class MapComponent implements OnInit {
     });
   }
 
-  private initOptions() {
+  private buildOptions(): MapOptions {
     const tyle = tyleLayer.find(t => t.name === this.tyleLayer);
 
-    this.options = {
+    return {
       layers: [
         tileLayer(
           tyle.url, {
@@ -52,6 +53,26 @@ export class MapComponent implements OnInit {
       zoom: 17,
       center: this.position
     };
+  }
+
+  private getDefaultIcon(){
+    return {
+      icon: icon({
+        iconSize: [ 25, 41 ],
+        iconAnchor: [ 13, 41 ],
+        iconUrl: 'assets/marker-icon.png',
+        shadowUrl: 'assets/marker-shadow.png'
+      })
+    }
+  }
+
+  private initLayers() {
+    setTimeout(() => {
+      this.layers = [
+        marker(latLng(this.markLat, this.markLon), this.getDefaultIcon()), //parked car
+        marker(this.position, this.getDefaultIcon())
+      ];
+    }, 500);
   }
 }
 

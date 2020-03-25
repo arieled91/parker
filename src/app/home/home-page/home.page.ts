@@ -6,7 +6,6 @@ import {Router} from '@angular/router';
 import {LoadingController, PopoverController} from '@ionic/angular';
 import {HomeOptionsComponent} from '../home-options/home-options.component';
 import {LocationUtils} from '../../location/location.utils';
-import {error} from 'util';
 
 @Component({
   selector: 'app-index',
@@ -18,6 +17,7 @@ export class HomePage implements OnInit, OnDestroy {
   private car: Car;
   private subscriptions: Subscription[] = [];
   loading: HTMLIonLoadingElement;
+  parkInfo: string = null;
 
   constructor(
     private carStore: CarStore,
@@ -30,7 +30,10 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptions.push(this.carStore.selected().subscribe(car => this.car = car));
+    this.subscriptions.push(this.carStore.selected().subscribe(car => {
+      this.car = car;
+      if(car.location) this.parkInfo = car.location.description
+    }));
   }
 
   ngOnDestroy() {
@@ -54,7 +57,7 @@ export class HomePage implements OnInit, OnDestroy {
     LocationUtils.getPosition().subscribe(
       (position: Position) => {
         this.loading.dismiss();
-        let car = {...this.car, location: new CarLocation(position.coords.latitude, position.coords.longitude)};
+        let car = {...this.car, location: new CarLocation(position.coords.latitude, position.coords.longitude, this.parkInfo)};
         this.carStore.update(car);
     },
       error => {

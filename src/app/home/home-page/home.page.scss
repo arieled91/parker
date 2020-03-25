@@ -3,16 +3,14 @@
   text-align: center;
 }
 
-.homeGrid{
+.home-grid{
   height: 100%;
   display: flex;
   flex-flow: column;
 }
 
-.expandRow{
+.map-row{
   flex-grow: 1;
-}
-
-.margin-bottom-20 {
+  margin-top: -10px;
   margin-bottom: 20px
 }
