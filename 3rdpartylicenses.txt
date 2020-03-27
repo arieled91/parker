@@ -94,6 +94,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @ionic-native/core
 MIT
 
+@ionic-native/geolocation
+MIT
+
 @ionic-native/splash-screen
 MIT
 
