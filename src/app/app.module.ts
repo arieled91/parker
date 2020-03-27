@@ -17,6 +17,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {IonicStorageModule} from '@ionic/storage';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
     StatusBar,
     SplashScreen,
     SQLite,
+    Geolocation,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent]

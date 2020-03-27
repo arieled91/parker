@@ -13,7 +13,7 @@ import {CarStore} from '../../store/car.store';
 })
 export class CarFormComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
-  @Input() title = 'Auto';
+  @Input() title = 'Vehículo';
   private _car: Car;
   @Output() save = new EventEmitter<Car>();
 

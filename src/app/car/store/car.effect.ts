@@ -30,7 +30,7 @@ export class CarEffects {
       mergeMap(() =>
         this.carService.findAll().pipe(
           map((data: Car[]) => {
-            return actions.loadAllCarsSuccess({car: data});
+            return actions.loadAllCarsSuccess({cars: data});
           }),
           catchError((error: Error) => {
             return of(actions.carActionFail(error));
@@ -43,7 +43,12 @@ export class CarEffects {
   loadAllCarsSuccess$ = createEffect(() =>
       this.actions$.pipe(
         ofType(actions.loadAllCarsSuccess),
-        tap(() => this.dismissLoading())
+        tap(action => {
+          this.dismissLoading();
+          if(!action.cars || action.cars.length <= 0){
+            this.router.navigate(['car']);
+          }
+        })
       ),
     {dispatch: false}
   );
@@ -97,13 +102,13 @@ export class CarEffects {
   createCarSuccess$ = createEffect(() =>
       this.actions$.pipe(
         ofType(actions.createCarSuccess),
+        map((action => actions.selectCar({id: action.car.id}))),
         tap(() => {
           this.dismissLoading();
           this.router.navigate(['/']);
           this.showInfoToast('Creado');
         }),
-      ),
-    {dispatch: false}
+      )
   );
 
   loadCar$ = createEffect(() =>

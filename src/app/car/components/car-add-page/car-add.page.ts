@@ -9,7 +9,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 @Component({
   selector: 'car-add-page',
   template: `
-      <app-car-form-view [title]="'Nuevo Auto'" [car]="$car | async" (save)="onSave($event)"></app-car-form-view>
+      <app-car-form-view [title]="'Nuevo Vehículo'" [car]="$car | async" (save)="onSave($event)"></app-car-form-view>
   `,
 })
 export class CarAddPage {

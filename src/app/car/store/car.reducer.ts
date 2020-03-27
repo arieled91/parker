@@ -63,7 +63,7 @@ const reducer = createReducer(
   }),
   on(actions.loadAllCarsSuccess, (state, action) => {
     state = {...state, loading: false};
-    return adapter.addAll(action.car, state);
+    return adapter.addAll(action.cars, state);
   }),
   on(actions.carActionFail, (state, error) => {
     console.log(error);

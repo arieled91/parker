@@ -11,7 +11,7 @@ import {CarStore} from '../../car/store/car.store';
           <ion-list-header>Opciones</ion-list-header>
           <ion-item button (click)="onAddCar()">
               <ion-icon slot="start"  name="add-outline"></ion-icon>
-              <ion-label>Nuevo Auto</ion-label>
+              <ion-label>Nuevo Vehículo</ion-label>
           </ion-item>
           <ion-item button *ngIf="car" (click)="onEditCar()">
               <ion-icon slot="start"  name="create-outline"></ion-icon>

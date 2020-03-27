@@ -12,7 +12,7 @@ export const loadAllCars = createAction(
 
 export const loadAllCarsSuccess = createAction(
   '[Car Action] Load all cars success',
-  props<{car: Car[]}>()
+  props<{cars: Car[]}>()
 );
 
 export const loadCar = createAction(

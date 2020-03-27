@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LocationUtils} from '../location.utils';
-import {icon, LatLng, latLng, marker, TileLayer, tileLayer} from 'leaflet';
+import {icon, LatLng, latLng, marker, tileLayer} from 'leaflet';
 import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/layers/control/leaflet-control-layers-config.model';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {MapPosition} from './map.model';
 
 @Component({
   selector: 'app-map',
@@ -10,7 +11,7 @@ import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/l
 })
 export class MapComponent implements OnInit {
 
-  @Input() markLat: number;
+  @Input() markLocation?: {lat: number, lon: number};
   @Input() markLon: number;
   @Input() markDesc: string;
 
@@ -18,23 +19,29 @@ export class MapComponent implements OnInit {
   zoom: number;
   layers;
 
-  constructor() {
+  constructor(
+    private geolocation: Geolocation
+  ) {
   }
 
   ngOnInit() {
     this.center();
-    this.initLayers();
+  }
+
+  public getPosition(): MapPosition{
+    return new MapPosition(this.position.lat, this.position.lng)
   }
 
   private center() {
-    LocationUtils.getPosition().subscribe(position => {
+    this.geolocation.getCurrentPosition().then(position => {
       this.position = latLng(position.coords.latitude, position.coords.longitude);
       this.zoom = 17;
+      this.initLayers();
     });
   }
 
   options = {
-    layers: [tileLayer(mapLayers.maptiler.url, mapLayers.maptiler.options)],
+    layers: [tileLayer(mapLayers.osm.url, mapLayers.osm.options)],
     zoom: 17,
     center: this.position
   };
@@ -50,12 +57,14 @@ export class MapComponent implements OnInit {
   };
 
 
+
   private initLayers() {
+    const catMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.defaultIcon}) : undefined;
+
     setTimeout(() => {
-      this.layers = [
-        marker(latLng(this.markLat, this.markLon), {...this.defaultIcon}), //parked car
-        marker(this.position, {...this.defaultIcon})
-      ];
+      let layerBuiler = [marker(this.position, {...this.defaultIcon})];
+      if(catMarker) layerBuiler = [...layerBuiler, catMarker];
+      this.layers  = layerBuiler;
     }, 500);
   }
 
@@ -72,7 +81,7 @@ export class MapComponent implements OnInit {
 const mapLayers = {
   maptiler: {
     name: 'MapTiler',
-    url: 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=q0OSgtssrWFEcPJ0MA4R',
+    url: 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}@2x.png?key=q0OSgtssrWFEcPJ0MA4R',
     options: {maxZoom: 18, tileSize: 512, zoomOffset: -1, minZoom: 1, crossOrigin: true,
       attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'}
   },
@@ -87,3 +96,4 @@ const mapLayers = {
     options: {maxZoom: 20, attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
   }
 };
+
