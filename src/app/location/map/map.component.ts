@@ -43,6 +43,7 @@ export class MapComponent implements OnInit {
   options = {
     layers: [tileLayer(mapLayers.osm.url, mapLayers.osm.options)],
     zoom: 17,
+    maxZoom: 19,
     center: this.position
   };
 
