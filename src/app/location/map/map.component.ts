@@ -3,6 +3,7 @@ import {icon, LatLng, latLng, marker, tileLayer} from 'leaflet';
 import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/layers/control/leaflet-control-layers-config.model';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {MapPosition} from './map.model';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -15,6 +16,7 @@ export class MapComponent implements OnInit {
   @Input() markLon: number;
   @Input() markDesc: string;
 
+  currentPosition: LatLng;
   position: LatLng;
   zoom: number;
   layers;
@@ -25,7 +27,14 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.center();
+    this.geolocation.watchPosition().pipe(
+      tap(watch => {
+        if(watch.coords) this.currentPosition = latLng(watch.coords.latitude, watch.coords.longitude);
+        else this.geolocation.getCurrentPosition()
+          .then(pos => this.currentPosition = latLng(pos.coords.latitude, pos.coords.longitude))
+      }),
+      tap(() => this.center()) //todo do not center if user moved map manually
+    ).subscribe();
   }
 
   public getPosition(): MapPosition{
@@ -33,11 +42,9 @@ export class MapComponent implements OnInit {
   }
 
   private center() {
-    this.geolocation.getCurrentPosition().then(position => {
-      this.position = latLng(position.coords.latitude, position.coords.longitude);
-      this.zoom = 17;
-      this.initLayers();
-    });
+    this.position = latLng(this.currentPosition.lat, this.currentPosition.lng);
+    this.zoom = 17;
+    this.initLayers();
   }
 
   options = {
@@ -57,14 +64,22 @@ export class MapComponent implements OnInit {
     })
   };
 
+  locationIcon = {
+    icon: icon({
+      iconSize: [ 25, 41 ],
+      iconAnchor: [ 13, 41 ],
+      iconUrl: 'assets/location.svg'
+    })
+  };
+
 
 
   private initLayers() {
-    const catMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.defaultIcon}) : undefined;
+    const carMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.defaultIcon}) : undefined;
 
     setTimeout(() => {
-      let layerBuiler = [marker(this.position, {...this.defaultIcon})];
-      if(catMarker) layerBuiler = [...layerBuiler, catMarker];
+      let layerBuiler = [marker(this.currentPosition, {...this.locationIcon})];
+      if(carMarker) layerBuiler = [...layerBuiler, carMarker];
       this.layers  = layerBuiler;
     }, 500);
   }
