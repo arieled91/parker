@@ -140,7 +140,7 @@ export class MapComponent implements OnInit, OnChanges {
         this.savedLocationMarker.setLatLng(this.carMarkerLatLng());
       } else {
         this.savedLocationMarker = this.buildSavedLocationMarker();
-        this.map.addLayer(this.savedLocationMarker);
+        if(this.map) this.map.addLayer(this.savedLocationMarker);
       }
     }
   }
