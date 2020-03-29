@@ -26,6 +26,11 @@ export class CarFormComponent implements OnInit, AfterViewInit, OnChanges, OnDes
     this.buildForm();
   }
 
+  hasError(name: string){
+    const control = this.carForm.controls[name];
+    return control.errors && control.touched;
+  }
+
   @Input() public set car(car: Car) {
     this._car = {...car};
   }
@@ -59,7 +64,8 @@ export class CarFormComponent implements OnInit, AfterViewInit, OnChanges, OnDes
 
 
   onSave() {
-    this.save.emit(this.car);
+    this.carForm.markAllAsTouched();
+    if(this.carForm.valid) this.save.emit(this.car);
   }
 
   ngOnDestroy() {

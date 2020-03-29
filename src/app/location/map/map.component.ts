@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {icon, LatLng, latLng, marker, tileLayer, Map, LeafletEvent, Marker} from 'leaflet';
-import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/layers/control/leaflet-control-layers-config.model';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {icon, LatLng, latLng, LeafletEvent, Map, marker, Marker, tileLayer} from 'leaflet';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {MapPosition} from './map.model';
 import {tap} from 'rxjs/operators';
@@ -10,9 +9,9 @@ import {tap} from 'rxjs/operators';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnChanges {
 
-  @Input() markLocation?: {lat: number, lon: number};
+  @Input() savedLocation?: { lat: number, lon: number };
   @Input() markDesc: string;
 
   currentPosition: LatLng;
@@ -22,6 +21,39 @@ export class MapComponent implements OnInit {
   userControl: boolean = false;
   map: Map;
   centerMarker: Marker;
+  savedLocationMarker: Marker;
+
+  options = {
+    layers: [tileLayer(mapLayers.osm.url, mapLayers.osm.options)],
+    zoom: 17,
+    center: this.position
+  };
+
+  blueIcon = {
+    icon: icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 41],
+      iconUrl: 'assets/marker-icon.png',
+      shadowUrl: 'assets/marker-shadow.png'
+    })
+  };
+
+  redIcon = {
+    icon: icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 41],
+      iconUrl: 'assets/marker-icon-2x-red.png',
+      shadowUrl: 'assets/marker-shadow.png'
+    })
+  };
+
+  locationIcon = {
+    icon: icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 41],
+      iconUrl: 'assets/location.svg'
+    })
+  };
 
   constructor(
     private geolocation: Geolocation
@@ -31,18 +63,23 @@ export class MapComponent implements OnInit {
   ngOnInit() {
     this.geolocation.watchPosition().pipe(
       tap(watch => {
-        if(watch.coords) this.currentPosition = latLng(watch.coords.latitude, watch.coords.longitude);
-        else this.geolocation.getCurrentPosition()
-          .then(pos => this.currentPosition = latLng(pos.coords.latitude, pos.coords.longitude))
+        if (watch.coords) {
+          this.currentPosition = latLng(watch.coords.latitude, watch.coords.longitude);
+        } else {
+          this.geolocation.getCurrentPosition()
+            .then(pos => this.currentPosition = latLng(pos.coords.latitude, pos.coords.longitude));
+        }
       }),
       tap(() => {
-        if(!this.userControl) this.center(); //do not center if user moved map manually
+        if (!this.userControl) {
+          this.center();
+        } //do not center if user moved map manually
       })
     ).subscribe();
   }
 
-  public getPosition(): MapPosition{
-    return new MapPosition(this.position.lat, this.position.lng)
+  public getPosition(): MapPosition {
+    return new MapPosition(this.position.lat, this.position.lng);
   }
 
   center() {
@@ -51,60 +88,24 @@ export class MapComponent implements OnInit {
     this.initLayers();
   }
 
-  options = {
-    layers: [tileLayer(mapLayers.osm.url, mapLayers.osm.options)],
-    zoom: 17,
-    center: this.position
-  };
-
-
-  blueIcon = {
-    icon: icon({
-      iconSize: [ 25, 41 ],
-      iconAnchor: [ 13, 41 ],
-      iconUrl: 'assets/marker-icon.png',
-      shadowUrl: 'assets/marker-shadow.png'
-    })
-  };
-
-  redIcon = {
-    icon: icon({
-      iconSize: [ 25, 41 ],
-      iconAnchor: [ 13, 41 ],
-      iconUrl: 'assets/marker-icon-2x-red.png',
-      shadowUrl: 'assets/marker-shadow.png'
-    })
-  };
-
-
-
-  locationIcon = {
-    icon: icon({
-      iconSize: [ 25, 41 ],
-      iconAnchor: [ 13, 41 ],
-      iconUrl: 'assets/location.svg'
-    })
-  };
 
   private initLayers() {
-    const carMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.redIcon, title: this.markDesc}) : undefined;
-
     setTimeout(() => {
+      if (this.savedLocation) {
+        this.savedLocationMarker = this.buildSavedLocationMarker();
+      }
       this.centerMarker = marker(this.map.getCenter(), {...this.blueIcon});
       let layerBuiler = [marker(this.currentPosition, {...this.locationIcon}), this.centerMarker];
-      if(carMarker) layerBuiler = [...layerBuiler, carMarker];
-      this.layers  = layerBuiler;
+      if (this.savedLocationMarker) {
+        layerBuiler = [...layerBuiler, this.savedLocationMarker];
+      }
+      this.layers = layerBuiler;
     }, 500);
   }
 
-  // layersCtrl: LeafletControlLayersConfig = {
-  //   overlays: {},
-  //   baseLayers: {
-  //     'MapTiler': tileLayer(mapLayers.maptiler.url, mapLayers.maptiler.options),
-  //     'Stadia Maps': tileLayer(mapLayers.stadia.url, mapLayers.stadia.options),
-  //     'Open Street Map': tileLayer(mapLayers.osm.url, mapLayers.osm.options),
-  //    }
-  // };
+  private buildSavedLocationMarker(): Marker {
+    return marker(this.carMarkerLatLng(), {...this.redIcon, title: this.markDesc});
+  }
 
   onMapReady(map: Map) {
     this.map = map;
@@ -123,11 +124,25 @@ export class MapComponent implements OnInit {
     this.center();
   }
 
-
-
+  private carMarkerLatLng() {
+    return latLng(this.savedLocation.lat, this.savedLocation.lon);
+  }
 
   onMove($event: LeafletEvent) {
-    if(this.centerMarker) this.centerMarker.setLatLng(this.map.getCenter());
+    if (this.centerMarker) {
+      this.centerMarker.setLatLng(this.map.getCenter());
+    }
+  }
+
+  ngOnChanges() {
+    if (this.savedLocation) {
+      if (this.savedLocationMarker) {
+        this.savedLocationMarker.setLatLng(this.carMarkerLatLng());
+      } else {
+        this.savedLocationMarker = this.buildSavedLocationMarker();
+        this.map.addLayer(this.savedLocationMarker);
+      }
+    }
   }
 }
 
@@ -135,8 +150,10 @@ const mapLayers = {
   maptiler: {
     name: 'MapTiler',
     url: 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}@2x.png?key=q0OSgtssrWFEcPJ0MA4R',
-    options: {maxZoom: 18, tileSize: 512, zoomOffset: -1, minZoom: 1, crossOrigin: true,
-      attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'}
+    options: {
+      maxZoom: 18, tileSize: 512, zoomOffset: -1, minZoom: 1, crossOrigin: true,
+      attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'
+    }
   },
   stadia: {
     name: 'Stadia Maps',

@@ -16,6 +16,10 @@
                 <ion-label position="floating" color="primary">Nombre:</ion-label>
                 <ion-input formControlName="name" minlength="3" style="font-size: 20px"></ion-input>
             </ion-item>
+            <ion-label color="danger" class="input-error" *ngIf="hasError('name')">
+                es necesario un nombre para identificar su vehículo
+            </ion-label>
+
             <ion-item>
                 <ion-label position="floating">Marca:</ion-label>
                 <ion-input formControlName="brand"></ion-input>

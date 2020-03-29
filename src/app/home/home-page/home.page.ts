@@ -30,7 +30,6 @@ export class HomePage implements OnInit, OnDestroy {
   ) {
     this.carStore.load();
     this.initLoading();
-    // this.prepareForRefresh();
   }
 
   ngOnInit() {
@@ -57,12 +56,10 @@ export class HomePage implements OnInit, OnDestroy {
     return await popover.present();
   }
 
-
   saveLocation() {
     let position: MapPosition = this.map.getPosition();
     let car = {...this.car, location: new CarLocation(position.lat, position.lon, this.parkInfo)};
     this.carStore.update(car);
-    this.reload();
   }
 
   async initLoading(){
@@ -70,21 +67,5 @@ export class HomePage implements OnInit, OnDestroy {
       message: 'Cargando...',
       duration: 30000
     });
-  }
-
-  private prepareForRefresh() {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => {
-      return false;
-    };
-    this.subscriptions.push(this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        // Trick the Router into believing it's last link wasn't previously loaded
-        this.router.navigated = false;
-      }
-    }));
-  }
-
-  public reload(){
-    window.location.reload()
   }
 }
