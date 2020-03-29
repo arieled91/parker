@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {icon, LatLng, latLng, marker, tileLayer} from 'leaflet';
+import {icon, LatLng, latLng, marker, tileLayer, Map, LeafletEvent} from 'leaflet';
 import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/layers/control/leaflet-control-layers-config.model';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {MapPosition} from './map.model';
@@ -20,6 +20,7 @@ export class MapComponent implements OnInit {
   position: LatLng;
   zoom: number;
   layers;
+  userControl: boolean = false;
 
   constructor(
     private geolocation: Geolocation
@@ -33,7 +34,9 @@ export class MapComponent implements OnInit {
         else this.geolocation.getCurrentPosition()
           .then(pos => this.currentPosition = latLng(pos.coords.latitude, pos.coords.longitude))
       }),
-      tap(() => this.center()) //todo do not center if user moved map manually
+      tap(() => {
+        if(!this.userControl) this.center(); //do not center if user moved map manually
+      })
     ).subscribe();
   }
 
@@ -41,7 +44,7 @@ export class MapComponent implements OnInit {
     return new MapPosition(this.position.lat, this.position.lng)
   }
 
-  private center() {
+  center() {
     this.position = latLng(this.currentPosition.lat, this.currentPosition.lng);
     this.zoom = 17;
     this.initLayers();
@@ -50,7 +53,6 @@ export class MapComponent implements OnInit {
   options = {
     layers: [tileLayer(mapLayers.osm.url, mapLayers.osm.options)],
     zoom: 17,
-    maxZoom: 19,
     center: this.position
   };
 
@@ -84,14 +86,30 @@ export class MapComponent implements OnInit {
     }, 500);
   }
 
-  layersCtrl: LeafletControlLayersConfig = {
-    overlays: {},
-    baseLayers: {
-      'MapTiler': tileLayer(mapLayers.maptiler.url, mapLayers.maptiler.options),
-      'Stadia Maps': tileLayer(mapLayers.stadia.url, mapLayers.stadia.options),
-      'Open Street Map': tileLayer(mapLayers.osm.url, mapLayers.osm.options),
-     }
-  };
+  // layersCtrl: LeafletControlLayersConfig = {
+  //   overlays: {},
+  //   baseLayers: {
+  //     'MapTiler': tileLayer(mapLayers.maptiler.url, mapLayers.maptiler.options),
+  //     'Stadia Maps': tileLayer(mapLayers.stadia.url, mapLayers.stadia.options),
+  //     'Open Street Map': tileLayer(mapLayers.osm.url, mapLayers.osm.options),
+  //    }
+  // };
+
+  onMapReady(map: Map) {
+  }
+
+  onMoveStart($event: LeafletEvent) {
+    this.userControl = true;
+  }
+
+  onZoomStart($event: LeafletEvent) {
+    this.userControl = true;
+  }
+
+  autocenter() {
+    this.userControl = false;
+    this.center();
+  }
 }
 
 const mapLayers = {
@@ -109,7 +127,7 @@ const mapLayers = {
   osm: {
     name: 'Open Street Map',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: {maxZoom: 20, attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+    options: {maxZoom: 19, attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
   }
 };
 

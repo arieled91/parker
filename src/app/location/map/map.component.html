@@ -4,11 +4,16 @@
      [(leafletCenter)]="position"
      [(leafletZoom)]="zoom"
      [leafletLayers]="layers"
-     [leafletLayersControl]="layersCtrl"
+     (leafletMapReady)="onMapReady($event)"
+     (leafletMapMoveStart)="onMoveStart($event)"
+     (leafletMapZoomStart)="onZoomStart($event)"
 ><ion-spinner class="spinner"></ion-spinner>
 </div>
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light" (click)="center()">
+    <ion-fab-button color="light" (click)="autocenter()">
         <ion-icon name="locate-outline"></ion-icon>
     </ion-fab-button>
 </ion-fab>
+
+
+<!--[leafletLayersControl]="layersCtrl"-->
