@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {icon, LatLng, latLng, marker, tileLayer, Map, LeafletEvent} from 'leaflet';
+import {icon, LatLng, latLng, marker, tileLayer, Map, LeafletEvent, Marker} from 'leaflet';
 import {LeafletControlLayersConfig} from '@asymmetrik/ngx-leaflet/dist/leaflet/layers/control/leaflet-control-layers-config.model';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {MapPosition} from './map.model';
@@ -13,7 +13,6 @@ import {tap} from 'rxjs/operators';
 export class MapComponent implements OnInit {
 
   @Input() markLocation?: {lat: number, lon: number};
-  @Input() markLon: number;
   @Input() markDesc: string;
 
   currentPosition: LatLng;
@@ -21,6 +20,8 @@ export class MapComponent implements OnInit {
   zoom: number;
   layers;
   userControl: boolean = false;
+  map: Map;
+  centerMarker: Marker;
 
   constructor(
     private geolocation: Geolocation
@@ -57,7 +58,7 @@ export class MapComponent implements OnInit {
   };
 
 
-  defaultIcon = {
+  blueIcon = {
     icon: icon({
       iconSize: [ 25, 41 ],
       iconAnchor: [ 13, 41 ],
@@ -65,6 +66,17 @@ export class MapComponent implements OnInit {
       shadowUrl: 'assets/marker-shadow.png'
     })
   };
+
+  redIcon = {
+    icon: icon({
+      iconSize: [ 25, 41 ],
+      iconAnchor: [ 13, 41 ],
+      iconUrl: 'assets/marker-icon-2x-red.png',
+      shadowUrl: 'assets/marker-shadow.png'
+    })
+  };
+
+
 
   locationIcon = {
     icon: icon({
@@ -74,13 +86,12 @@ export class MapComponent implements OnInit {
     })
   };
 
-
-
   private initLayers() {
-    const carMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.defaultIcon}) : undefined;
+    const carMarker = this.markLocation ? marker(latLng(this.markLocation.lat, this.markLocation.lon), {...this.redIcon, title: this.markDesc}) : undefined;
 
     setTimeout(() => {
-      let layerBuiler = [marker(this.currentPosition, {...this.locationIcon})];
+      this.centerMarker = marker(this.map.getCenter(), {...this.blueIcon});
+      let layerBuiler = [marker(this.currentPosition, {...this.locationIcon}), this.centerMarker];
       if(carMarker) layerBuiler = [...layerBuiler, carMarker];
       this.layers  = layerBuiler;
     }, 500);
@@ -96,6 +107,7 @@ export class MapComponent implements OnInit {
   // };
 
   onMapReady(map: Map) {
+    this.map = map;
   }
 
   onMoveStart($event: LeafletEvent) {
@@ -109,6 +121,13 @@ export class MapComponent implements OnInit {
   autocenter() {
     this.userControl = false;
     this.center();
+  }
+
+
+
+
+  onMove($event: LeafletEvent) {
+    if(this.centerMarker) this.centerMarker.setLatLng(this.map.getCenter());
   }
 }
 

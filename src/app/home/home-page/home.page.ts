@@ -62,7 +62,7 @@ export class HomePage implements OnInit, OnDestroy {
     let position: MapPosition = this.map.getPosition();
     let car = {...this.car, location: new CarLocation(position.lat, position.lon, this.parkInfo)};
     this.carStore.update(car);
-    // this.reload();
+    this.reload();
   }
 
   async initLoading(){

@@ -6,6 +6,7 @@
      [leafletLayers]="layers"
      (leafletMapReady)="onMapReady($event)"
      (leafletMapMoveStart)="onMoveStart($event)"
+     (leafletMapMove)="onMove($event)"
      (leafletMapZoomStart)="onZoomStart($event)"
 ><ion-spinner class="spinner"></ion-spinner>
 </div>
@@ -14,6 +15,7 @@
         <ion-icon name="locate-outline"></ion-icon>
     </ion-fab-button>
 </ion-fab>
+
 
 
 <!--[leafletLayersControl]="layersCtrl"-->
