@@ -31,18 +31,20 @@ export class MapComponent implements OnInit, OnChanges {
 
   blueIcon = {
     icon: icon({
-      iconSize: [25, 41],
-      iconAnchor: [13, 41],
-      iconUrl: 'assets/marker-icon.png',
+      iconSize: [55, 55],
+      iconAnchor: [30, 55],
+      shadowAnchor: [15, 45],
+      iconUrl: 'assets/blue-512.png',
       shadowUrl: 'assets/marker-shadow.png'
     })
   };
 
   redIcon = {
     icon: icon({
-      iconSize: [25, 41],
-      iconAnchor: [13, 41],
-      iconUrl: 'assets/marker-icon-2x-red.png',
+      iconSize: [55, 55],
+      iconAnchor: [30, 55],
+      shadowAnchor: [15, 45],
+      iconUrl: 'assets/park-512.png',
       shadowUrl: 'assets/marker-shadow.png'
     })
   };
