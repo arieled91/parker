@@ -1,10 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
 import {Car} from '../../model/car.model';
 import {CarStore} from '../../store/car.store';
-import {Observable, of, Subscription} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'car-add-page',

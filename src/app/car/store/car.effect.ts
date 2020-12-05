@@ -45,7 +45,7 @@ export class CarEffects {
         ofType(actions.loadAllCarsSuccess),
         tap(action => {
           this.dismissLoading();
-          if(!action.cars || action.cars.length <= 0){
+          if(!Array.isArray(action.cars) || action.cars.length <= 0){
             this.router.navigate(['car']);
           }
         })
