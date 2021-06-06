@@ -6,7 +6,7 @@ import Home from "../screens/Home";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const RootNavigator = () => (
+const RootNavigator = (): JSX.Element => (
   <Stack.Navigator>
     <Stack.Screen name="Home" component={Home} options={{title: 'Parker'}}/>
     <Stack.Screen name="NotFound" component={NotFoundScreen} options={{title: 'Oops!'}}/>

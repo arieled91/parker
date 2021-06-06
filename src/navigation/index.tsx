@@ -4,7 +4,7 @@ import {ColorSchemeName} from 'react-native';
 import LinkingConfiguration from './LinkingConfiguration';
 import RootNavigator from "./RootNavigation";
 
-const Navigation = ({ colorScheme }: Props) => (
+const Navigation = ({ colorScheme }: Props): JSX.Element => (
   <NavigationContainer
     linking={LinkingConfiguration}
     theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

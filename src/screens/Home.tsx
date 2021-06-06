@@ -1,11 +1,15 @@
 import * as React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {Layout} from "@ui-kitten/components";
+import Map from "../components/Map";
 
-const Home = () => {
+const Home = (): JSX.Element => {
   return (
-    <View style={styles.container}>
-      <Text>Hola mundo</Text>
-    </View>
+    <Layout style={styles.container} level='1'>
+      <View style={{height: '100%'}}>
+        <Map/>
+      </View>
+    </Layout>
   );
 }
 
@@ -13,7 +17,6 @@ export default Home
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20
+    flex: 1
   }
 });

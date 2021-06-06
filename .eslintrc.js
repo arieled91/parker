@@ -22,7 +22,6 @@ module.exports = {
     "react-native"
   ],
   "rules": {
-    "indent": ["warn", 2],
-    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "indent": ["warn", 2]
   }
 };
