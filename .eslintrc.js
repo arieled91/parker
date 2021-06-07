@@ -22,6 +22,7 @@ module.exports = {
     "react-native"
   ],
   "rules": {
-    "indent": ["warn", 2]
+    "indent": ["warn", 2],
+    '@typescript-eslint/no-var-requires': 0
   }
 };

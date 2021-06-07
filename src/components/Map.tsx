@@ -2,19 +2,18 @@ import {StyleSheet, View} from "react-native";
 import React from "react";
 import MapView, {EventUserLocation, Marker, MarkerProps, Region} from "react-native-maps";
 import useLocation from "../hooks/useLocation";
-import {Button, Icon, useTheme} from "@ui-kitten/components";
+import {Button, Icon} from "@ui-kitten/components";
 import {IconProps} from "@ui-kitten/components/ui/icon/icon.component";
 import darkMap from "../theme/darkMap";
 import useColorScheme from "../hooks/useColorScheme";
 
 const Map = (): JSX.Element | null => {
-  const theme = useTheme();
   const colorScheme = useColorScheme();
   const {location} = useLocation();
   const [region, setRegion] = React.useState<Region>()
   const [followUser, setFollowUser] = React.useState<boolean>(true)
-  const [vehicle, setVehicle] = React.useState<MarkerProps | null>(null)
-  const [optionsVisible, setOptionsVisible] = React.useState<boolean>(false)
+  const [showOptions, setShowOptions] = React.useState<boolean>(false)
+  const [marker, setMarker] = React.useState<MarkerProps | null>(null)
 
   if(!location) return null;
   
@@ -36,20 +35,28 @@ const Map = (): JSX.Element | null => {
   }
 
   const handleSave = () => {
-    setVehicle({
+    setMarker({
       coordinate: {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
       },
-      title: "Vehiculo",
-      description: "description",
+      title: "Mi Vehiculo",
       draggable: true
     } as MarkerProps)
   }
 
   const handleDelete = () => {
-    setVehicle(null);
-    setOptionsVisible(false);
+    setMarker(null);
+  }
+
+  const handleShowMarker = () => {
+    if(marker?.coordinate){
+      setFollowUser(false);
+      setRegion(createRegion(
+        Number(marker.coordinate.latitude),
+        Number(marker.coordinate.longitude)
+      ))
+    }
   }
 
   return (
@@ -63,43 +70,51 @@ const Map = (): JSX.Element | null => {
           onPanDrag={handlePanDrag}
           scrollEnabled={true}
           rotateEnabled={true}
-          toolbarEnabled={true}
+          toolbarEnabled={false}
           zoomEnabled={true}
           followsUserLocation={followUser}
           showsMyLocationButton={false}
           showsUserLocation={true}
           showsScale={true}
           customMapStyle= {colorScheme === 'dark' ? darkMap : []}
+          onPress={() => setShowOptions(false)}
         >
-          {vehicle && <Marker {...vehicle} onPress={() => setOptionsVisible(true)}/>}
+          {marker && <Marker {...marker}
+            onPress={() => setShowOptions(true)}
+          />}
         </MapView>
-        <Button status='basic' appearance='ghost'
-          accessoryLeft={CenterIcon}
-          style={[styles.showLocation, {backgroundColor: theme['background-basic-color-3']}]}
+        <Button status='primary'
+          accessoryLeft={UserIcon}
+          style={styles.showUser}
           onPress={() => setFollowUser(true)}
         />
+        {marker && <Button status='primary'
+          accessoryLeft={PinIcon}
+          style={styles.showMarker}
+          onPress={handleShowMarker}
+        />}
       </View>
-      {!vehicle && <Button
-        accessoryLeft={SaveIcon}
+      {!marker && <Button
+        accessoryLeft={PinIcon}
         style={{borderRadius: 0}}
         onPress={handleSave}
       >Guardar
       </Button>}
-      {vehicle && optionsVisible && <Button
-        accessoryLeft={DeleteIcon}
-        style={{borderRadius: 0}}
-        onPress={handleDelete}
-      >Eliminar
-      </Button>}
+      {marker && showOptions &&
+        <Button
+          accessoryLeft={DeleteIcon}
+          style={styles.deleteMarker}
+          onPress={handleDelete}
+        />}
     </>
   );
 };
 
-const CenterIcon = (props: IconProps): JSX.Element => (
-  <Icon {...props} name='navigation-outline'/>
+const UserIcon = (props: IconProps): JSX.Element => (
+  <Icon {...props} name='person-outline'/>
 )
 
-const SaveIcon = (props: IconProps): JSX.Element => (
+const PinIcon = (props: IconProps): JSX.Element => (
   <Icon {...props} name='pin-outline'/>
 )
 
@@ -108,6 +123,13 @@ const DeleteIcon = (props: IconProps): JSX.Element => (
 )
 
 export default Map;
+
+const roundBtn = {
+  height: 50,
+  width: 50,
+  borderRadius: 60,
+  opacity: 0.85
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -120,14 +142,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
-  showLocation: {
+  showUser: {
     position: 'absolute',
-    top: 10,
+    top: 15,
     right: 5,
-    height: 50,
-    width: 50,
-    borderRadius: 60,
-    opacity: 0.85
+    ...roundBtn
+  },
+  showMarker: {
+    position: 'absolute',
+    bottom: 10,
+    right: 5,
+    ...roundBtn
+  },
+  deleteMarker: {
+    position: 'absolute',
+    bottom: 10,
+    left: 5,
+    ...roundBtn
   },
   markerMenu: {
     position: 'absolute',
